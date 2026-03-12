@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Food Menu</title>
+<style>
+body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    background: radial-gradient(circle, #111, #000);
+    color: #fff;
+}
+
+.container{
+    max-width:700px;
+    margin:30px auto;
+    padding:25px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 18px;
+    box-shadow: 0 0 15px rgba(255,255,255,0.1);
+}
+
+h1{
+    text-align:center;
+    color:#ffcc66;
+    margin-bottom:20px;
+}
+
+.menu-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px 15px;
+    margin:8px 0;
+    border-radius:10px;
+    background: rgba(0,0,0,0.25);
+    transition: 0.2s;
+}
+
+.menu-item:hover{
+    background: rgba(255,255,255,0.1);
+}
+
+.menu-item label{
+    cursor:pointer;
+    font-size:16px;
+}
+
+.buttons{
+    display:flex;
+    justify-content:space-between;
+    margin-top:25px;
+}
+
+button{
+    padding:10px 25px;
+    border:none;
+    border-radius:20px;
+    cursor:pointer;
+    font-size:15px;
+}
+
+.confirm{ background: #28a745; color:white;}
+.next{ background: #1b4fbf; color:white;}
+.back{ background: #d35400; color:white;}
+
+button:hover{ opacity:0.9;}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1 id="menu-title">🍛 South Indian Food Menu</h1>
+    <div id="menu-items">
+        <div class="menu-item"><label><input type="checkbox"> Masala Dosa</label><span>₹120</span></div>
+        <div class="menu-item"><label><input type="checkbox"> Idli Sambar</label><span>₹80</span></div>
+        <div class="menu-item"><label><input type="checkbox"> Vada</label><span>₹60</span></div>
+        <div class="menu-item"><label><input type="checkbox"> Pongal</label><span>₹100</span></div>
+        <div class="menu-item"><label><input type="checkbox"> Uttapam</label><span>₹110</span></div>
+    </div>
+
+    <div class="buttons">
+        <button class="confirm" onclick="confirmOrder()">Confirm</button>
+        <button class="next" onclick="nextPage()">Next Page</button>
+    </div>
+</div>
+
+<script>
+var currentMenu = 'south';
+
+// second south indian menu
+var southMenu2 = [
+    {name:'Plain Dosa', price:90},
+    {name:'Rava Dosa', price:130},
+    {name:'Curd Rice', price:90},
+    {name:'Lemon Rice', price:80},
+    {name:'Filter Coffee', price:40}
+];
+
+function nextPage(){
+    if(currentMenu == 'south'){
+        currentMenu = 'south2';
+        document.getElementById('menu-title').innerText = '🍽️ South Indian Specials';
+        var container = document.getElementById('menu-items');
+        container.innerHTML = '';
+
+        for(var i=0;i<southMenu2.length;i++){
+            var div = document.createElement('div');
+            div.className = 'menu-item';
+
+            var lbl = document.createElement('label');
+            var chk = document.createElement('input');
+            chk.type = 'checkbox';
+            lbl.appendChild(chk);
+            lbl.appendChild(document.createTextNode(' ' + southMenu2[i].name));
+
+            var spn = document.createElement('span');
+            spn.innerText = '₹' + southMenu2[i].price;
+
+            div.appendChild(lbl);
+            div.appendChild(spn);
+            container.appendChild(div);
+        }
+
+        var btns = document.querySelector('.buttons');
+        if(!document.querySelector('.back')){
+            var backBtn = document.createElement('button');
+            backBtn.className = 'back';
+            backBtn.innerText = 'Back';
+            backBtn.onclick = previousPage;
+            btns.insertBefore(backBtn, btns.querySelector('.next'));
+        }
+    }
+}
+
+function previousPage(){
+    currentMenu = 'south';
+    document.getElementById('menu-title').innerText = '🍛 South Indian Food Menu';
+    var container = document.getElementById('menu-items');
+    container.innerHTML = '';
+
+    var southMenu1 = [
+        {name:'Masala Dosa', price:120},
+        {name:'Idli Sambar', price:80},
+        {name:'Vada', price:60},
+        {name:'Pongal', price:100},
+        {name:'Uttapam', price:110}
+    ];
+
+    for(var i=0;i<southMenu1.length;i++){
+        var div = document.createElement('div');
+        div.className = 'menu-item';
+
+        var lbl = document.createElement('label');
+        var chk = document.createElement('input');
+        chk.type = 'checkbox';
+        lbl.appendChild(chk);
+        lbl.appendChild(document.createTextNode(' ' + southMenu1[i].name));
+
+        var spn = document.createElement('span');
+        spn.innerText = '₹' + southMenu1[i].price;
+
+        div.appendChild(lbl);
+        div.appendChild(spn);
+        container.appendChild(div);
+    }
+
+    var backBtn = document.querySelector('.back');
+    if(backBtn) backBtn.remove();
+}
+
+function confirmOrder(){
+    var selected = [];
+    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    for(var i=0;i<checkboxes.length;i++){
+        if(checkboxes[i].checked){
+            selected.push(checkboxes[i].parentNode.textContent.trim());
+        }
+    }
+
+    if(selected.length>0){
+        alert('You chose: ' + selected.join(', '));
+    }else{
+        alert('No items picked 😅');
+    }
+}
+</script>
+</body>
+</html>
+a
