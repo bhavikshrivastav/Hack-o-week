@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Travel Blog</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        nav {
+            background-color: #0b3c5d;
+            padding: 15px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+        }
+
+        header {
+            background: linear-gradient(to right, #0b3c5d, #328cc1);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            padding: 30px;
+        }
+
+        .blog {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .blog img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .blog h2 {
+            margin-top: 15px;
+            color: #0b3c5d;
+        }
+
+        .info {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .blog p {
+            line-height: 1.6;
+            color: #444;
+        }
+
+        footer {
+            background-color: #0b3c5d;
+            color: white;
+            text-align: center;
+            padding: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="#home">Home</a>
+    <a href="#trip1">Trip 1</a>
+    <a href="#trip2">Trip 2</a>
+    <a href="#trip3">Trip 3</a>
+    <a href="#contact">Contact</a>
+</nav>
+
+<header id="home">
+    <h1>My Travel Blog</h1>
+    <p>Stories, Places & Experiences</p>
+</header>
+
+<div class="container">
+
+    <!-- Trip 1 -->
+    <div class="blog" id="trip1">
+        <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470" alt="Mountain Trip">
+        <h2>Trip 1: Adventure in the Mountains</h2>
+        <div class="info">📍 Location: Himalayan Region | 📅 Duration: 5 Days</div>
+        <p>
+            This mountain trip was an unforgettable adventure filled with scenic valleys,
+            snowy peaks, and peaceful surroundings. Every morning began with fresh air
+            and stunning sunrise views.
+        </p>
+        <p>
+            The highlight of this journey was trekking through narrow trails and staying
+            in small mountain villages. The locals were friendly and shared beautiful
+            stories about their culture and lifestyle.
+        </p>
+        <p>
+            Personally, this trip taught me patience, physical endurance, and a deep
+            appreciation for nature.
+        </p>
+    </div>
+
+    <!-- Trip 2 -->
+    <div class="blog" id="trip2">
+        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e" alt="Beach Trip">
+        <h2>Trip 2: Relaxing at the Beach</h2>
+        <div class="info">📍 Location: Goa | 📅 Duration: 4 Days</div>
+        <p>
+            This beach vacation was all about relaxation and peace. The sound of waves,
+            warm sand, and cool breeze made every moment enjoyable.
+        </p>
+        <p>
+            I spent my days walking along the shoreline, enjoying local seafood,
+            and watching beautiful sunsets. The nightlife near the beach was lively
+            and full of energy.
+        </p>
+        <p>
+            This trip helped me slow down, refresh my mind, and return with positive energy.
+        </p>
+    </div>
+
+    <!-- Trip 3 -->
+    <div class="blog" id="trip3">
+        <img src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b" alt="City Trip">
+        <h2>Trip 3: Exploring a New City</h2>
+        <div class="info">📍 Location: Mumbai | 📅 Duration: 3 Days</div>
+        <p>
+            Exploring a new city was exciting and educational. The city was full of life,
+            with busy streets, tall buildings, and historical monuments.
+        </p>
+        <p>
+            I visited famous landmarks, museums, local markets, and street food stalls.
+            Every place had a unique story to tell and reflected the city’s culture.
+        </p>
+        <p>
+            This trip improved my understanding of urban life and helped me connect
+            with people from different backgrounds.
+        </p>
+    </div>
+
+</div>
+
+<footer id="contact">
+    <p>© 2026 My Travel Blog | Contact: mytravel@email.com</p>
+</footer>
+
+</body>
+</html>
