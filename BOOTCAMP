@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web Development Boot Camp</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, sans-serif;
+}
+
+body{
+line-height:1.6;
+background:#f8f9fa;
+}
+
+/* Header */
+
+header{
+background:linear-gradient(90deg,#ff6b6b,#ff3b3b);
+color:white;
+padding:30px 10px;
+text-align:center;
+}
+
+header h1{
+font-size:34px;
+}
+
+header h2{
+margin-top:5px;
+}
+
+header p{
+margin-top:10px;
+}
+
+/* Hero Section */
+
+.hero{
+background:white;
+padding:70px 20px;
+text-align:center;
+}
+
+.hero h2{
+font-size:32px;
+margin-bottom:20px;
+}
+
+.hero p{
+max-width:650px;
+margin:auto;
+margin-bottom:25px;
+font-size:17px;
+}
+
+/* Button */
+
+.btn{
+display:inline-block;
+background:#ff6b6b;
+color:white;
+padding:12px 28px;
+border-radius:6px;
+text-decoration:none;
+font-weight:bold;
+transition:0.3s;
+}
+
+.btn:hover{
+background:#ff3b3b;
+transform:scale(1.05);
+}
+
+/* Features */
+
+.features{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:25px;
+padding:50px 20px;
+background:#ffffff;
+}
+
+.feature-box{
+background:#f9f9f9;
+padding:30px;
+width:280px;
+border-radius:10px;
+text-align:center;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+transition:0.3s;
+}
+
+.feature-box:hover{
+transform:translateY(-8px);
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+.feature-box h3{
+margin-bottom:10px;
+color:#ff6b6b;
+}
+
+/* Instructor */
+
+.instructor{
+background:#eef2f7;
+padding:50px 20px;
+text-align:center;
+}
+
+.instructor img{
+width:120px;
+border-radius:50%;
+margin:15px 0;
+border:4px solid #ff6b6b;
+}
+
+/* Footer */
+
+footer{
+background:#222;
+color:white;
+text-align:center;
+padding:20px;
+margin-top:20px;
+}
+
+/* Responsive */
+
+@media(max-width:768px){
+
+.hero h2{
+font-size:26px;
+}
+
+header h1{
+font-size:26px;
+}
+
+.features{
+flex-direction:column;
+align-items:center;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>SYMBIOSIS INSTITUTE OF TECHNOLOGY, NAGPUR</h1>
+<h2>Web Development Boot Camp</h2>
+<p>Learn HTML, CSS, JavaScript and build real projects</p>
+</header>
+
+<section class="hero">
+<h2>Become a Web Developer in 8 Weeks</h2>
+<p>Join our intensive boot camp designed for beginners and aspiring developers. Learn modern web development and build your own websites.</p>
+<a href="#" class="btn">Enroll Now</a>
+</section>
+
+<section class="features">
+
+<div class="feature-box">
+<h3> Hands-on Projects</h3>
+<p>Build real-world websites and applications during the boot camp.</p>
+</div>
+
+<div class="feature-box">
+<h3> Expert Mentors</h3>
+<p>Learn from experienced web developers and industry professionals.</p>
+</div>
+
+<div class="feature-box">
+<h3> Certification</h3>
+<p>Receive a certificate after completing the boot camp successfully.</p>
+</div>
+
+</section>
+
+<section class="instructor">
+
+<h2>Meet Your Instructor</h2>
+<p><b>RASHI BANGRE</b> – Senior Web Developer with 1+ years experience teaching web technologies.</p>
+
+</section>
+
+<footer>
+
+<p>© 2026 Web Development Boot Camp | Contact: info@bootcamp.com</p>
+
+</footer>
+
+</body>
+</html>
