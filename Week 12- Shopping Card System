@@ -1,142 +1,79 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-// Colors
-#define RESET   "\033[0m"
-#define RED     "\033[1;31m"
-#define GREEN   "\033[1;32m"
-#define YELLOW  "\033[1;33m"
-#define CYAN    "\033[1;36m"
-
-// Stack Node
-struct Node {
-    char url[100];
-    struct Node* next;
-};
-
-// Two stacks
-struct Node* backStack = NULL;
-struct Node* forwardStack = NULL;
-char current[100] = "Home";
-
-// Push
-void push(struct Node** top, char url[]) {
-    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
-    strcpy(newNode->url, url);
-    newNode->next = *top;
-    *top = newNode;
-}
-
-// Pop
-char* pop(struct Node** top) {
-    if (*top == NULL) return NULL;
-
-    struct Node* temp = *top;
-    *top = temp->next;
-
-    char* url = (char*)malloc(100);
-    strcpy(url, temp->url);
-
-    free(temp);
-    return url;
-}
-
-// Visit new page
-void visit(char url[]) {
-    push(&backStack, current);  // save current to back stack
-    strcpy(current, url);
-
-    // clear forward stack
-    while (forwardStack != NULL) {
-        pop(&forwardStack);
-    }
-
-    printf(GREEN "\n✔ Visited: %s\n" RESET, current);
-}
-
-// Go Back
-void goBack() {
-    if (backStack == NULL) {
-        printf(YELLOW "\n⚠ No pages in back history!\n" RESET);
-        return;
-    }
-
-    push(&forwardStack, current);
-    char* url = pop(&backStack);
-    strcpy(current, url);
-
-    printf(CYAN "\n⬅ Back to: %s\n" RESET, current);
-}
-
-// Go Forward
-void goForward() {
-    if (forwardStack == NULL) {
-        printf(YELLOW "\n⚠ No pages in forward history!\n" RESET);
-        return;
-    }
-
-    push(&backStack, current);
-    char* url = pop(&forwardStack);
-    strcpy(current, url);
-
-    printf(CYAN "\n➡ Forward to: %s\n" RESET, current);
-}
-
-// Show Current Page
-void showCurrent() {
-    printf(GREEN "\n🌐 Current Page: %s\n" RESET, current);
-}
-
-// Menu
-void menu() {
-    printf(CYAN "\n======= 🌐 BROWSER HISTORY MENU =======\n" RESET);
-    printf("1. Visit New Page\n");
-    printf("2. Back\n");
-    printf("3. Forward\n");
-    printf("4. Show Current Page\n");
-    printf("5. Exit\n");
-    printf("======================================\n");
-}
-
-// Main
-int main() {
-    int choice;
-    char url[100];
-
-    while (1) {
-        menu();
-        printf("Enter choice: ");
-        scanf("%d", &choice);
-
-        switch (choice) {
-
-        case 1:
-            printf("Enter URL: ");
-            scanf("%s", url);
-            visit(url);
-            break;
-
-        case 2:
-            goBack();
-            break;
-
-        case 3:
-            goForward();
-            break;
-
-        case 4:
-            showCurrent();
-            break;
-
-        case 5:
-            printf(GREEN "\nExiting Browser...\n" RESET);
-            exit(0);
-
-        default:
-            printf(RED "\nInvalid choice!\n" RESET);
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shopping Cart System</title>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
         }
-    }
+        input, button {
+            margin: 5px;
+            padding: 8px;
+        }
+        table {
+            border-collapse: collapse;
+            margin-top: 20px;
+            width: 70%;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
 
-    return 0;
-}
+<h2>🛒 Shopping Cart System</h2>
+
+<!-- Input Section -->
+<h3>Add Item</h3>
+<form>
+    <label>Item ID:</label><br>
+    <input type="number" placeholder="Enter ID"><br>
+
+    <label>Item Name:</label><br>
+    <input type="text" placeholder="Enter Name"><br>
+
+    <label>Price:</label><br>
+    <input type="number" placeholder="Enter Price"><br>
+
+    <label>Quantity:</label><br>
+    <input type="number" placeholder="Enter Quantity"><br>
+
+    <br>
+    <button type="button">Insert at Head</button>
+    <button type="button">Insert at Tail</button>
+    <button type="button">Delete by ID</button>
+    <button type="button">Display Cart</button>
+</form>
+
+<!-- Cart Display -->
+<h3>Cart Items</h3>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Quantity</th>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>Shoes</td>
+        <td>1500</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>T-Shirt</td>
+        <td>500</td>
+        <td>2</td>
+    </tr>
+</table>
+
+<h3>Total Cost: 2500</h3>
+
+</body>
+</html>
