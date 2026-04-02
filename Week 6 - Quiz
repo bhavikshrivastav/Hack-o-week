@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .quiz-container {
+            background: #111;
+            padding: 25px;
+            width: 400px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .option {
+            background: #222;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .option:hover {
+            background: #444;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: black;
+            color: white;
+            border: none;
+            margin-top: 15px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #333;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <h2 id="question">Question</h2>
+    <div id="options"></div>
+    <button onclick="nextQuestion()">Next</button>
+</div>
+
+<script>
+    const quizData = [
+        {
+            question: "1. What does HTML stand for?",
+            options: [
+                "Hyper Text Markup Language",
+                "High Text Machine Language",
+                "Hyperlinks Text Mark Language",
+                "None of the above"
+            ],
+            answer: 0
+        },
+        {
+            question: "2. Which language is used for styling web pages?",
+            options: ["HTML", "JQuery", "CSS", "XML"],
+            answer: 2
+        },
+        {
+            question: "3. Which is not a programming language?",
+            options: ["Python", "Java", "HTML", "C"],
+            answer: 2
+        },
+        {
+            question: "4. Which symbol is used for comments in JavaScript?",
+            options: ["//", "<!-- -->", "#", "**"],
+            answer: 0
+        },
+        {
+            question: "5. Which company developed JavaScript?",
+            options: ["Google", "Microsoft", "Netscape", "Apple"],
+            answer: 2
+        }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let selectedOption = null;
+
+    const questionEl = document.getElementById("question");
+    const optionsEl = document.getElementById("options");
+
+    function loadQuestion() {
+        selectedOption = null;
+        optionsEl.innerHTML = "";
+        const q = quizData[currentQuestion];
+        questionEl.textContent = q.question;
+
+        q.options.forEach((option, index) => {
+            const div = document.createElement("div");
+            div.classList.add("option");
+            div.textContent = option;
+            div.onclick = () => selectOption(index, div);
+            optionsEl.appendChild(div);
+        });
+    }
+
+    function selectOption(index, element) {
+        selectedOption = index;
+        document.querySelectorAll(".option").forEach(opt => {
+            opt.style.background = "#222";
+        });
+        element.style.background = "#555";
+    }
+
+    function nextQuestion() {
+        if (selectedOption === null) {
+            alert("Please select an answer!");
+            return;
+        }
+
+        if (selectedOption === quizData[currentQuestion].answer) {
+            score++;
+        }
+
+        currentQuestion++;
+
+        if (currentQuestion < quizData.length) {
+            loadQuestion();
+        } else {
+            showResult();
+        }
+    }
+
+    function showResult() {
+        document.querySelector(".quiz-container").innerHTML = `
+            <h2>Quiz Completed!</h2>
+            <p>Your Score: ${score} / ${quizData.length}</p>
+            <button onclick="location.reload()">Restart Quiz</button>
+        `;
+    }
+
+    loadQuestion();
+</script>
+
+</body>
+</html>
