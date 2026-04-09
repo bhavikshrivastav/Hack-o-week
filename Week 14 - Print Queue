@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Creative Print Queue</title>
+
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        text-align: center;
+        padding: 20px;
+    }
+
+    h1 {
+        margin-bottom: 10px;
+    }
+
+    .controls input, .controls button {
+        padding: 10px;
+        margin: 5px;
+        border-radius: 8px;
+        border: none;
+        outline: none;
+    }
+
+    button {
+        background: #00c9a7;
+        color: white;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #00a78e;
+    }
+
+    #queue {
+        margin-top: 20px;
+    }
+
+    .job {
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(10px);
+        padding: 15px;
+        margin: 10px auto;
+        width: 300px;
+        border-radius: 12px;
+        text-align: left;
+        position: relative;
+    }
+
+    .status {
+        font-size: 12px;
+        opacity: 0.8;
+    }
+
+    .progress {
+        height: 8px;
+        background: #ddd;
+        border-radius: 5px;
+        margin-top: 8px;
+        overflow: hidden;
+    }
+
+    .bar {
+        height: 100%;
+        width: 0%;
+        background: #00ffcc;
+        transition: width 0.5s;
+    }
+
+</style>
+</head>
+
+<body>
+
+<h1>🖨️ Smart Print Queue</h1>
+<p>FIFO | Animated | Interactive</p>
+
+<div class="controls">
+    <input type="text" id="doc" placeholder="Document name">
+    <input type="number" id="pages" placeholder="Pages">
+    <button onclick="addJob()">➕ Add Job</button>
+    <button onclick="startPrinting()">▶ Start Printing</button>
+</div>
+
+<div id="queue"></div>
+
+<script>
+let queue = [];
+let isPrinting = false;
+
+function addJob() {
+    let doc = document.getElementById("doc").value;
+    let pages = parseInt(document.getElementById("pages").value);
+
+    if (!doc || !pages) {
+        alert("Enter valid details");
+        return;
+    }
+
+    queue.push({
+        id: Date.now(),
+        document: doc,
+        pages: pages,
+        printed: 0,
+        status: "Waiting"
+    });
+
+    renderQueue();
+}
+
+function startPrinting() {
+    if (isPrinting || queue.length === 0) return;
+    processNext();
+}
+
+function processNext() {
+    if (queue.length === 0) {
+        isPrinting = false;
+        return;
+    }
+
+    isPrinting = true;
+    let job = queue[0];
+    job.status = "Printing";
+
+    let interval = setInterval(() => {
+        job.printed++;
+
+        let progress = (job.printed / job.pages) * 100;
+        document.getElementById("bar-" + job.id).style.width = progress + "%";
+
+        renderQueue();
+
+        if (job.printed >= job.pages) {
+            clearInterval(interval);
+            job.status = "Done";
+            queue.shift(); // FIFO dequeue
+            setTimeout(processNext, 800);
+        }
+    }, 500);
+}
+
+function renderQueue() {
+    let container = document.getElementById("queue");
+    container.innerHTML = "";
+
+    queue.forEach(job => {
+        let div = document.createElement("div");
+        div.className = "job";
+
+        div.innerHTML = `
+            <strong>${job.document}</strong><br>
+            Pages: ${job.pages}<br>
+            <span class="status">${job.status}</span>
+            <div class="progress">
+                <div class="bar" id="bar-${job.id}"></div>
+            </div>
+        `;
+
+        container.appendChild(div);
+    });
+
+    if (queue.length === 0) {
+        container.innerHTML = "<p>✨ Queue is empty</p>";
+    }
+}
+</script>
+
+</body>
+</html>
