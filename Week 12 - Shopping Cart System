@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cart DS</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
+    color: #fff;
+}
+
+/* Layout */
+.page {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    height: 100vh;
+}
+
+/* Header */
+.header {
+    grid-column: 1 / -1;
+    padding: 20px 30px;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h1 {
+    font-size: 26px;
+    color: #00f5d4;
+}
+
+/* Panels */
+.left {
+    padding: 30px;
+}
+
+.right {
+    background: rgba(0,0,0,0.3);
+    padding: 25px;
+    border-left: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Cards */
+.form-card, .vis-section, .log-bar {
+    background: rgba(255,255,255,0.05);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 15px rgba(0,255,255,0.1);
+}
+
+/* Inputs */
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 6px 0;
+    border-radius: 10px;
+    border: none;
+    background: rgba(255,255,255,0.1);
+    color: white;
+}
+
+input::placeholder {
+    color: #ccc;
+}
+
+/* Buttons */
+.btn {
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    margin: 5px 0;
+    width: 100%;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-head {
+    background: #00f5d4;
+    color: black;
+}
+
+.btn-tail {
+    background: #ff4d6d;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(0,255,255,0.6);
+}
+
+/* Visual nodes */
+.v-box {
+    background: rgba(255,255,255,0.1);
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #00f5d4;
+    display: inline-block;
+    margin: 5px;
+}
+
+/* Cart items */
+.cart-item {
+    background: rgba(255,255,255,0.08);
+    padding: 12px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.3s;
+}
+
+.cart-item:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 10px rgba(0,255,255,0.4);
+}
+
+.ci-del {
+    background: transparent;
+    border: none;
+    color: #ff4d6d;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+/* Summary */
+.summary {
+    margin-top: 20px;
+}
+
+.summary-total {
+    font-size: 20px;
+    color: #00f5d4;
+}
+
+/* Scroll */
+.cart-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Animation */
+.cart-item {
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0; transform: translateY(10px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+</style>
+
+</head>
+<body>
+
+<div class="page">
+
+<header class="header">
+    <h1>🛒Shopping cart </h1>
+</header>
+
+<div class="left">
+
+<div class="form-card">
+    <h3>Add Item</h3>
+    <input id="iName" placeholder="Item name">
+    <input id="iPrice" type="number" placeholder="Price">
+    <input id="iQty" type="number" value="1">
+
+    <button class="btn btn-head" onclick="addItem('head')">Insert Head</button>
+    <button class="btn btn-tail" onclick="addItem('tail')">Insert Tail</button>
+</div>
+
+<div class="vis-section">
+    <h3>List</h3>
+    <div id="visTrack">HEAD</div>
+</div>
+
+<div class="log-bar" id="logBar">Ready</div>
+
+</div>
+
+<div class="right">
+
+<h3>Cart</h3>
+
+<input id="rId" placeholder="Remove by ID">
+<button class="btn btn-tail" onclick="removeById()">Remove</button>
+
+<div class="cart-list" id="cartList"></div>
+
+<div class="summary">
+    <p>Nodes: <span id="sizeVal">0</span></p>
+    <p>Total Items: <span id="qtyVal">0</span></p>
+    <p class="summary-total">Total: ₹<span id="totalVal">0.00</span></p>
+</div>
+
+</div>
+
+</div>
+
+<script>
+class Node {
+    constructor(id, name, qty, price) {
+        this.id = id;
+        this.name = name;
+        this.qty = qty;
+        this.price = price;
+        this.next = null;
+    }
+}
+
+class LinkedList {
+    constructor() {
+        this.head = null;
+        this.tail = null;
+        this.size = 0;
+    }
+
+    insertHead(node) {
+        if (!this.head) this.head = this.tail = node;
+        else {
+            node.next = this.head;
+            this.head = node;
+        }
+        this.size++;
+    }
+
+    insertTail(node) {
+        if (!this.tail) this.head = this.tail = node;
+        else {
+            this.tail.next = node;
+            this.tail = node;
+        }
+        this.size++;
+    }
+
+    remove(id) {
+        if (!this.head) return;
+
+        if (this.head.id == id) {
+            this.head = this.head.next;
+            this.size--;
+            return;
+        }
+
+        let prev = this.head;
+        let cur = this.head.next;
+
+        while (cur) {
+            if (cur.id == id) {
+                prev.next = cur.next;
+                if (cur == this.tail) this.tail = prev;
+                this.size--;
+                return;
+            }
+            prev = cur;
+            cur = cur.next;
+        }
+    }
+
+    toArray() {
+        let arr = [];
+        let cur = this.head;
+        while (cur) {
+            arr.push(cur);
+            cur = cur.next;
+        }
+        return arr;
+    }
+}
+
+let list = new LinkedList();
+let id = 1;
+
+function addItem(pos) {
+    let name = iName.value;
+    let price = parseFloat(iPrice.value);
+    let qty = parseInt(iQty.value);
+
+    if (!name || isNaN(price)) return;
+
+    let node = new Node(id++, name, qty, price);
+
+    if (pos === 'head') list.insertHead(node);
+    else list.insertTail(node);
+
+    render();
+}
+
+function removeById() {
+    list.remove(parseInt(rId.value));
+    render();
+}
+
+function render() {
+    let arr = list.toArray();
+
+    // visual
+    visTrack.innerHTML = arr.map(n => `[${n.name}] → `).join('') + 'NULL';
+
+    // cart
+    cartList.innerHTML = arr.map(n => `
+        <div class="cart-item">
+            ${n.name} (x${n.qty}) - ₹${(n.qty*n.price).toFixed(2)}
+            <button class="ci-del" onclick="list.remove(${n.id});render()">×</button>
+        </div>
+    `).join('');
+
+    let total = 0, qty = 0;
+    arr.forEach(n => {
+        total += n.price * n.qty;
+        qty += n.qty;
+    });
+
+    sizeVal.textContent = list.size;
+    qtyVal.textContent = qty;
+    totalVal.textContent = total.toFixed(2);
+}
+</script>
+
+</body>
+</html>
