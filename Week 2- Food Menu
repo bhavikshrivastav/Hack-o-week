@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Indian Restaurant Menu</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial;
+    color: white;
+    text-align: center;
+    background: radial-gradient(circle, #1e3a8a, #020617);
+}
+
+/* Corner Designs */
+body::before, body::after {
+    content: "";
+    position: fixed;
+    width: 150px;
+    height: 150px;
+    border: 3px solid cyan;
+}
+body::before { top: 10px; left: 10px; }
+body::after { bottom: 10px; right: 10px; }
+
+/* Title */
+h1 {
+    margin-top: 20px;
+}
+
+/* Menu Grid */
+.menu-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Cards */
+.card {
+    background: rgba(0,0,50,0.7);
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: 0 0 15px blue;
+    transition: 0.3s;
+}
+.card:hover {
+    transform: scale(1.05);
+}
+
+/* Buttons */
+button {
+    padding: 10px 20px;
+    margin: 10px;
+    background: navy;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+/* Cart */
+.cart-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: black;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+/* Bubbles */
+.bubbles span {
+    position: absolute;
+    bottom: -50px;
+    width: 15px;
+    height: 15px;
+    background: cyan;
+    border-radius: 50%;
+    animation: rise 10s linear infinite;
+}
+@keyframes rise {
+    from {transform: translateY(0);}
+    to {transform: translateY(-100vh);}
+}
+</style>
+
+</head>
+<body>
+
+<div class="bubbles"></div>
+
+<h1 id="title">Menu</h1>
+
+<div class="cart-btn" onclick="viewCart()">🛒 Cart</div>
+
+<div class="menu-container" id="menu"></div>
+
+<div>
+    <button onclick="prevPage()">⬅ Back</button>
+    <button onclick="nextPage()">Next ➡</button>
+    <button onclick="confirmOrder()">✅ Confirm</button>
+</div>
+
+<script>
+let currentPage = 0;
+const pages = ["Starters", "Lunch", "Dessert"];
+
+/* Indian Menu Data */
+const menuData = {
+
+Starters: [
+{name:"Paneer Tikka", price:180},
+{name:"Chicken Tikka", price:220},
+{name:"Veg Manchurian", price:160},
+{name:"Chicken Manchurian", price:200},
+{name:"Spring Rolls", price:150},
+{name:"Hara Bhara Kebab", price:170},
+{name:"Chilli Paneer", price:190},
+{name:"Chilli Chicken", price:230},
+{name:"Aloo Tikki", price:120},
+{name:"Samosa Plate", price:100},
+{name:"Papdi Chaat", price:130},
+{name:"Dahi Puri", price:140}
+],
+
+Lunch: [
+{name:"Butter Chicken", price:320},
+{name:"Paneer Butter Masala", price:280},
+{name:"Dal Makhani", price:250},
+{name:"Veg Biryani", price:260},
+{name:"Chicken Biryani", price:300},
+{name:"Jeera Rice", price:180},
+{name:"Tandoori Roti", price:30},
+{name:"Butter Naan", price:50},
+{name:"Mix Veg Curry", price:240},
+{name:"Chole Bhature", price:200},
+{name:"Rajma Chawal", price:220},
+{name:"Kadai Paneer", price:290}
+],
+
+Dessert: [
+{name:"Gulab Jamun", price:120},
+{name:"Rasgulla", price:110},
+{name:"Kaju Katli", price:200},
+{name:"Jalebi", price:100},
+{name:"Rabri", price:150},
+{name:"Rasmalai", price:140},
+{name:"Ice Cream", price:90},
+{name:"Kulfi", price:80},
+{name:"Gajar Halwa", price:130},
+{name:"Moong Dal Halwa", price:160},
+{name:"Falooda", price:170},
+{name:"Chocolate Brownie", price:180}
+]
+
+};
+
+/* Load Menu */
+function loadMenu() {
+    const type = pages[currentPage];
+    document.getElementById("title").innerText = type + " Menu";
+
+    const container = document.getElementById("menu");
+    container.innerHTML = "";
+
+    menuData[type].forEach(item => {
+        container.innerHTML += `
+        <div class="card">
+            <h3>${item.name}</h3>
+            <p>₹${item.price}</p>
+            <button onclick="addToCart('${item.name}', ${item.price})">Add</button>
+        </div>`;
+    });
+}
+
+/* Navigation */
+function nextPage() {
+    if (currentPage < pages.length - 1) {
+        currentPage++;
+        loadMenu();
+    }
+}
+function prevPage() {
+    if (currentPage > 0) {
+        currentPage--;
+        loadMenu();
+    }
+}
+
+/* Cart */
+function addToCart(name, price) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart.push({name, price});
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert("Added to cart");
+}
+
+function viewCart() {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let total = 0;
+    let msg = "Cart:\n";
+
+    cart.forEach(item => {
+        msg += item.name + " - ₹" + item.price + "\n";
+        total += item.price;
+    });
+
+    alert(msg + "\nTotal: ₹" + total);
+}
+
+function confirmOrder() {
+    alert("Order Confirmed!");
+    localStorage.removeItem("cart");
+}
+
+/* Bubbles */
+function createBubbles() {
+    const container = document.querySelector(".bubbles");
+    for (let i = 0; i < 25; i++) {
+        let span = document.createElement("span");
+        span.style.left = Math.random() * 100 + "vw";
+        span.style.animationDuration = (5 + Math.random() * 5) + "s";
+        container.appendChild(span);
+    }
+}
+
+/* Init */
+loadMenu();
+createBubbles();
+</script>
+
+</body>
+</html>
