@@ -1,0 +1,261 @@
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Math Quiz</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: black;
+    color: white;
+    overflow: hidden;
+}
+
+/* 🌌 BACKGROUND FORMULAS */
+body::before {
+    content: "E=mc²   π   ∑   ∫   √x   a²+b²=c²   sinθ   cosθ   tanθ   log   ln   f(x)=x²   dy/dx   ∆   ∞   lim x→0   ∫x dx   matrix   vector   σ   θ   α   β   γ   δ";
+    position: absolute;
+    width: 250%;
+    height: 250%;
+    font-size: 38px;
+    line-height: 70px;
+    color: rgba(255,255,255,0.05);
+    transform: rotate(-20deg);
+    animation: moveBg 25s linear infinite;
+}
+
+@keyframes moveBg {
+    from { transform: translateY(0) rotate(-20deg); }
+    to { transform: translateY(-300px) rotate(-20deg); }
+}
+
+/* 🎈 FLOATING MATH */
+#floating-math {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.formula {
+    position: absolute;
+    color: rgba(255,255,255,0.08);
+    animation: floatMove linear infinite;
+}
+
+@keyframes floatMove {
+    0% {
+        transform: translateY(100vh) translateX(0);
+        opacity: 0;
+    }
+    20% { opacity: 1; }
+    100% {
+        transform: translateY(-20vh) translateX(50px);
+        opacity: 0;
+    }
+}
+
+/* PAGE */
+.page {
+    display: none;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+
+.active {
+    display: flex;
+}
+
+/* 🔥 BIG PREMIUM CARD */
+.card {
+    width: 600px;
+    max-width: 95%;
+    padding: 50px;
+
+    background: radial-gradient(
+        circle at center,
+        rgba(0, 0, 0, 0.95) 0%,
+        rgba(0, 0, 0, 0.7) 50%,
+        rgba(0, 0, 0, 0.3) 100%
+    );
+
+    border-radius: 25px;
+    backdrop-filter: blur(15px);
+
+    text-align: center;
+
+    box-shadow: 
+        0 0 40px rgba(255,255,255,0.12),
+        inset 0 0 25px rgba(255,255,255,0.05);
+
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: scale(1.04);
+}
+
+/* BUTTON */
+button {
+    margin-top: 25px;
+    padding: 14px 30px;
+    border: none;
+    background: linear-gradient(45deg, #00adb5, #007f86);
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+</style>
+</head>
+
+<body>
+
+<!-- FLOATING EFFECT -->
+<div id="floating-math"></div>
+
+<!-- HOME -->
+<div class="page active" id="home">
+    <div class="card">
+        <h1>Math Quiz</h1>
+        <p>Challenge your brain 🚀</p>
+        <button onclick="startQuiz()">Start Quiz</button>
+    </div>
+</div>
+
+<!-- QUIZ -->
+<div class="page" id="q1">
+    <div class="card">
+        <h2>1. 2 + 2 = ?</h2>
+        <input type="radio" name="q1" value="3">3<br>
+        <input type="radio" name="q1" value="4">4<br>
+        <input type="radio" name="q1" value="5">5<br>
+        <button onclick="nextPage('q2')">Next</button>
+    </div>
+</div>
+
+<div class="page" id="q2">
+    <div class="card">
+        <h2>2. 5 × 3 = ?</h2>
+        <input type="radio" name="q2" value="15">15<br>
+        <input type="radio" name="q2" value="10">10<br>
+        <input type="radio" name="q2" value="20">20<br>
+        <button onclick="nextPage('q3')">Next</button>
+    </div>
+</div>
+
+<div class="page" id="q3">
+    <div class="card">
+        <h2>3. √16 = ?</h2>
+        <input type="radio" name="q3" value="4">4<br>
+        <input type="radio" name="q3" value="5">5<br>
+        <input type="radio" name="q3" value="6">6<br>
+        <button onclick="nextPage('q4')">Next</button>
+    </div>
+</div>
+
+<div class="page" id="q4">
+    <div class="card">
+        <h2>4. 10 / 2 = ?</h2>
+        <input type="radio" name="q4" value="5">5<br>
+        <input type="radio" name="q4" value="2">2<br>
+        <input type="radio" name="q4" value="10">10<br>
+        <button onclick="nextPage('q5')">Next</button>
+    </div>
+</div>
+
+<div class="page" id="q5">
+    <div class="card">
+        <h2>5. 9 - 3 = ?</h2>
+        <input type="radio" name="q5" value="6">6<br>
+        <input type="radio" name="q5" value="5">5<br>
+        <input type="radio" name="q5" value="7">7<br>
+        <button onclick="submitQuiz()">Submit</button>
+    </div>
+</div>
+
+<!-- RESULT -->
+<div class="page" id="result">
+    <div class="card">
+        <h1 id="scoreText"></h1>
+        <h2 id="resultText"></h2>
+        <button onclick="restart()">Home</button>
+    </div>
+</div>
+
+<script>
+function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+function startQuiz() {
+    showPage('q1');
+}
+
+function nextPage(next) {
+    showPage(next);
+}
+
+function submitQuiz() {
+    let score = 0;
+
+    if (document.querySelector('input[name="q1"]:checked')?.value == "4") score++;
+    if (document.querySelector('input[name="q2"]:checked')?.value == "15") score++;
+    if (document.querySelector('input[name="q3"]:checked')?.value == "4") score++;
+    if (document.querySelector('input[name="q4"]:checked')?.value == "5") score++;
+    if (document.querySelector('input[name="q5"]:checked')?.value == "6") score++;
+
+    document.getElementById("scoreText").innerText = "Your Score: " + score + "/5";
+
+    if (score > 2) {
+        document.getElementById("resultText").innerText = "PASS 🎉";
+    } else {
+        document.getElementById("resultText").innerText = "FAIL ❌";
+    }
+
+    showPage('result');
+}
+
+function restart() {
+    location.reload();
+}
+
+/* 🎈 RANDOM FLOATING FORMULAS */
+const formulas = [
+    "E=mc²","π","∑","∫","√x","a²+b²=c²",
+    "sinθ","cosθ","tanθ","log","ln",
+    "f(x)=x²","dy/dx","∆","∞","lim x→0",
+    "∫x dx","matrix","vector","σ","θ",
+    "α","β","γ","δ","x+y=z","n!",
+    "∇","∂","P(A|B)"
+];
+
+function createFormula() {
+    const el = document.createElement("div");
+    el.classList.add("formula");
+
+    el.innerText = formulas[Math.floor(Math.random() * formulas.length)];
+
+    el.style.left = Math.random() * 100 + "vw";
+    el.style.fontSize = (16 + Math.random() * 30) + "px";
+    el.style.animationDuration = (6 + Math.random() * 10) + "s";
+
+    document.getElementById("floating-math").appendChild(el);
+
+    setTimeout(() => el.remove(), 15000);
+}
+
+setInterval(createFormula, 400);
+</script>
+
+</body>
+</html>
