@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Exam Score Tracker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    input, button {
+      margin: 5px;
+      padding: 8px;
+    }
+    ul {
+      margin-top: 15px;
+    }
+    .stats {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Exam Score Tracker</h2>
+
+<input type="number" id="scoreInput" placeholder="Enter score (0-100)">
+<button onclick="addScore()">Add Score</button>
+
+<ul id="scoreList"></ul>
+
+<div class="stats">
+  <p id="min"></p>
+  <p id="max"></p>
+  <p id="mode"></p>
+</div>
+
+<script>
+  // Frequency array (0–100 scores)
+  const freq = new Array(101).fill(0);
+  let scores = [];
+
+  function addScore() {
+    const input = document.getElementById("scoreInput");
+    const score = parseInt(input.value);
+
+    if (isNaN(score) || score < 0 || score > 100) {
+      alert("Enter a valid score between 0 and 100");
+      return;
+    }
+
+    scores.push(score);
+    freq[score]++;
+
+    input.value = "";
+    updateUI();
+  }
+
+  function updateUI() {
+    displayScores();
+    calculateStats();
+  }
+
+  function displayScores() {
+    const list = document.getElementById("scoreList");
+    list.innerHTML = "";
+
+    scores.forEach(score => {
+      const li = document.createElement("li");
+      li.textContent = score;
+      list.appendChild(li);
+    });
+  }
+
+  function calculateStats() {
+    let min = -1;
+    let max = -1;
+    let mode = -1;
+    let maxFreq = 0;
+
+    // Linear traversal of frequency array
+    for (let i = 0; i <= 100; i++) {
+      if (freq[i] > 0) {
+        if (min === -1) min = i;
+        max = i;
+
+        if (freq[i] > maxFreq) {
+          maxFreq = freq[i];
+          mode = i;
+        }
+      }
+    }
+
+    document.getElementById("min").textContent = "Min Score: " + (min !== -1 ? min : "N/A");
+    document.getElementById("max").textContent = "Max Score: " + (max !== -1 ? max : "N/A");
+    document.getElementById("mode").textContent = "Mode Score: " + (mode !== -1 ? mode : "N/A");
+  }
+</script>
+
+</body>
+</html>
