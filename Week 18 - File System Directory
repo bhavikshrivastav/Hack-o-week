@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>File System Directory (Binary Tree)</title>
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+    }
+    input, button {
+      padding: 8px;
+      margin: 5px;
+    }
+    #treeDisplay {
+      margin-top: 20px;
+      white-space: pre;
+      font-family: monospace;
+    }
+    #output {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>File System Directory (Binary Tree)</h2>
+
+  <input type="text" id="folderName" placeholder="Enter folder name">
+  <button onclick="insertNode()">Insert Folder</button>
+
+  <br><br>
+
+  <button onclick="showPreorder()">Preorder</button>
+  <button onclick="showInorder()">Inorder</button>
+  <button onclick="showPostorder()">Postorder</button>
+
+  <div id="output"></div>
+  <div id="treeDisplay"></div>
+
+  <script>
+    class Node {
+      constructor(name) {
+        this.name = name;
+        this.left = null;
+        this.right = null;
+      }
+    }
+
+    let root = null;
+
+    // Insert like Binary Search Tree (alphabetical order)
+    function insert(root, name) {
+      if (root === null) return new Node(name);
+
+      if (name.toLowerCase() < root.name.toLowerCase()) {
+        root.left = insert(root.left, name);
+      } else {
+        root.right = insert(root.right, name);
+      }
+      return root;
+    }
+
+    function insertNode() {
+      const name = document.getElementById("folderName").value.trim();
+      if (name === "") return;
+
+      root = insert(root, name);
+      document.getElementById("folderName").value = "";
+      displayTree();
+    }
+
+    // Traversals
+    function preorder(node, result = []) {
+      if (node) {
+        result.push(node.name);
+        preorder(node.left, result);
+        preorder(node.right, result);
+      }
+      return result;
+    }
+
+    function inorder(node, result = []) {
+      if (node) {
+        inorder(node.left, result);
+        result.push(node.name);
+        inorder(node.right, result);
+      }
+      return result;
+    }
+
+    function postorder(node, result = []) {
+      if (node) {
+        postorder(node.left, result);
+        postorder(node.right, result);
+        result.push(node.name);
+      }
+      return result;
+    }
+
+    function showPreorder() {
+      document.getElementById("output").innerText =
+        "Preorder: " + preorder(root).join(" → ");
+    }
+
+    function showInorder() {
+      document.getElementById("output").innerText =
+        "Inorder: " + inorder(root).join(" → ");
+    }
+
+    function showPostorder() {
+      document.getElementById("output").innerText =
+        "Postorder: " + postorder(root).join(" → ");
+    }
+
+    // Display tree structure (sideways)
+    function displayTree(node = root, space = 0, output = []) {
+      const COUNT = 5;
+
+      if (node === null) return;
+
+      space += COUNT;
+
+      displayTree(node.right, space, output);
+
+      let line = " ".repeat(space - COUNT) + node.name;
+      output.push(line);
+
+      displayTree(node.left, space, output);
+
+      document.getElementById("treeDisplay").innerText = output.join("\n");
+    }
+  </script>
+
+</body>
+</html>
