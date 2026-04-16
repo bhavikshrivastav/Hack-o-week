@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Task Manager with Undo/Redo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    input, button {
+      padding: 8px;
+      margin: 5px;
+    }
+    ul {
+      margin-top: 15px;
+    }
+    li {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Task Manager (Undo/Redo)</h2>
+
+  <input type="text" id="taskInput" placeholder="Enter a task">
+  <button onclick="addTask()">Add Task</button>
+  <button onclick="undo()">Undo</button>
+  <button onclick="redo()">Redo</button>
+
+  <ul id="taskList"></ul>
+
+  <script>
+    let tasks = [];
+    let undoStack = [];
+    let redoStack = [];
+
+    function renderTasks() {
+      const list = document.getElementById("taskList");
+      list.innerHTML = "";
+
+      tasks.forEach((task, index) => {
+        const li = document.createElement("li");
+        li.textContent = task;
+
+        const delBtn = document.createElement("button");
+        delBtn.textContent = "Delete";
+        delBtn.onclick = () => deleteTask(index);
+
+        li.appendChild(delBtn);
+        list.appendChild(li);
+      });
+    }
+
+    function addTask() {
+      const input = document.getElementById("taskInput");
+      const task = input.value.trim();
+
+      if (task === "") return;
+
+      tasks.push(task);
+
+      // Save action for undo
+      undoStack.push({ type: "add", task: task });
+      redoStack = [];
+
+      input.value = "";
+      renderTasks();
+    }
+
+    function deleteTask(index) {
+      const removed = tasks.splice(index, 1)[0];
+
+      // Save action for undo
+      undoStack.push({ type: "delete", task: removed, index: index });
+      redoStack = [];
+
+      renderTasks();
+    }
+
+    function undo() {
+      if (undoStack.length === 0) return;
+
+      const action = undoStack.pop();
+
+      if (action.type === "add") {
+        tasks.pop();
+      } else if (action.type === "delete") {
+        tasks.splice(action.index, 0, action.task);
+      }
+
+      redoStack.push(action);
+      renderTasks();
+    }
+
+    function redo() {
+      if (redoStack.length === 0) return;
+
+      const action = redoStack.pop();
+
+      if (action.type === "add") {
+        tasks.push(action.task);
+      } else if (action.type === "delete") {
+        tasks.splice(action.index, 1);
+      }
+
+      undoStack.push(action);
+      renderTasks();
+    }
+  </script>
+
+</body>
+</html>
