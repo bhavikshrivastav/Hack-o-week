@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bank ATM Circular Queue</title>
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+    }
+    input, button {
+      padding: 8px;
+      margin: 5px;
+    }
+    .queue-box {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+    }
+    .slot {
+      width: 60px;
+      height: 60px;
+      border: 2px solid #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .active {
+      background-color: lightgreen;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Bank ATM Queue (Circular Queue)</h2>
+
+  <input type="text" id="customerName" placeholder="Customer name">
+  <button onclick="enqueue()">Add Customer</button>
+  <button onclick="dequeue()">Serve Customer</button>
+
+  <p id="status"></p>
+
+  <div class="queue-box" id="queueDisplay"></div>
+
+  <script>
+    const SIZE = 5;
+    let queue = new Array(SIZE);
+    let front = -1;
+    let rear = -1;
+
+    function isFull() {
+      return (front === 0 && rear === SIZE - 1) || (rear + 1 === front);
+    }
+
+    function isEmpty() {
+      return front === -1;
+    }
+
+    function enqueue() {
+      const name = document.getElementById("customerName").value.trim();
+      if (name === "") return;
+
+      if (isFull()) {
+        document.getElementById("status").innerText = "Queue is FULL!";
+        return;
+      }
+
+      if (front === -1) front = 0;
+      rear = (rear + 1) % SIZE;
+      queue[rear] = name;
+
+      document.getElementById("customerName").value = "";
+      document.getElementById("status").innerText = "Customer added.";
+      renderQueue();
+    }
+
+    function dequeue() {
+      if (isEmpty()) {
+        document.getElementById("status").innerText = "Queue is EMPTY!";
+        return;
+      }
+
+      let served = queue[front];
+      queue[front] = null;
+
+      if (front === rear) {
+        front = rear = -1;
+      } else {
+        front = (front + 1) % SIZE;
+      }
+
+      document.getElementById("status").innerText = served + " served.";
+      renderQueue();
+    }
+
+    function renderQueue() {
+      const display = document.getElementById("queueDisplay");
+      display.innerHTML = "";
+
+      for (let i = 0; i < SIZE; i++) {
+        const div = document.createElement("div");
+        div.className = "slot";
+
+        if (queue[i]) {
+          div.textContent = queue[i];
+          div.classList.add("active");
+        }
+
+        display.appendChild(div);
+      }
+    }
+
+    renderQueue();
+  </script>
+
+</body>
+</html>
