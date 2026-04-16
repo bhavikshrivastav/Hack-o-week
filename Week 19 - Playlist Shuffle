@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Playlist Shuffle (Doubly Linked List)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    input, button {
+      margin: 5px;
+      padding: 8px;
+    }
+    ul {
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Playlist Shuffle (Doubly Linked List)</h2>
+
+<input type="text" id="songInput" placeholder="Enter song name">
+<br>
+
+<button onclick="addFront()">Add to Front</button>
+<button onclick="addEnd()">Add to End</button>
+<button onclick="deletePosition()">Delete by Position</button>
+<button onclick="shuffle()">Shuffle (Reverse)</button>
+
+<br>
+<input type="number" id="positionInput" placeholder="Position to delete">
+
+<ul id="playlist"></ul>
+
+<script>
+  class Node {
+    constructor(data) {
+      this.data = data;
+      this.next = null;
+      this.prev = null;
+    }
+  }
+
+  class DoublyLinkedList {
+    constructor() {
+      this.head = null;
+      this.tail = null;
+    }
+
+    addFront(data) {
+      const newNode = new Node(data);
+      if (!this.head) {
+        this.head = this.tail = newNode;
+      } else {
+        newNode.next = this.head;
+        this.head.prev = newNode;
+        this.head = newNode;
+      }
+    }
+
+    addEnd(data) {
+      const newNode = new Node(data);
+      if (!this.tail) {
+        this.head = this.tail = newNode;
+      } else {
+        this.tail.next = newNode;
+        newNode.prev = this.tail;
+        this.tail = newNode;
+      }
+    }
+
+    deleteByPosition(pos) {
+      if (!this.head || pos < 1) return;
+
+      let current = this.head;
+      let count = 1;
+
+      if (pos === 1) {
+        this.head = this.head.next;
+        if (this.head) this.head.prev = null;
+        else this.tail = null;
+        return;
+      }
+
+      while (current && count < pos) {
+        current = current.next;
+        count++;
+      }
+
+      if (!current) return;
+
+      if (current.next) {
+        current.next.prev = current.prev;
+      } else {
+        this.tail = current.prev;
+      }
+
+      if (current.prev) {
+        current.prev.next = current.next;
+      }
+    }
+
+    reverse() {
+      let temp = null;
+      let current = this.head;
+
+      while (current) {
+        temp = current.prev;
+        current.prev = current.next;
+        current.next = temp;
+        current = current.prev;
+      }
+
+      if (temp) {
+        this.head = temp.prev;
+      }
+    }
+
+    display() {
+      let result = [];
+      let current = this.head;
+      while (current) {
+        result.push(current.data);
+        current = current.next;
+      }
+      return result;
+    }
+  }
+
+  const playlist = new DoublyLinkedList();
+
+  function updateUI() {
+    const list = document.getElementById("playlist");
+    list.innerHTML = "";
+    playlist.display().forEach(song => {
+      const li = document.createElement("li");
+      li.textContent = song;
+      list.appendChild(li);
+    });
+  }
+
+  function addFront() {
+    const song = document.getElementById("songInput").value;
+    if (song) {
+      playlist.addFront(song);
+      updateUI();
+    }
+  }
+
+  function addEnd() {
+    const song = document.getElementById("songInput").value;
+    if (song) {
+      playlist.addEnd(song);
+      updateUI();
+    }
+  }
+
+  function deletePosition() {
+    const pos = parseInt(document.getElementById("positionInput").value);
+    playlist.deleteByPosition(pos);
+    updateUI();
+  }
+
+  function shuffle() {
+    playlist.reverse();
+    updateUI();
+  }
+</script>
+
+</body>
+</html>
